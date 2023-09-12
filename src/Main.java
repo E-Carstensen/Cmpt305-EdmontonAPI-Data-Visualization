@@ -7,7 +7,6 @@ public class Main {
         String path = "/home/eric/IdeaProjects/CMPT305Lab1/src/data.csv";
         readFile(path);
 
-
     }
 
     public static void readFile(String filePath){
@@ -38,9 +37,7 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }
 
 
