@@ -26,11 +26,11 @@ public class Main {
                 // Read Line from file and split data
                 String[] data = line.split(splt);
 
+                // Init Account object and assign data
                 accountList[temp] = new Account();
-
-               // Account.assignData(accountList[temp], data);
                 accountList[temp].assignData(data);
-                System.out.println("Account #: " + accountList[temp].AccountNumber);
+
+                //System.out.println("Account #: " + accountList[temp].AccountNumber);
 
                 temp++;
 
