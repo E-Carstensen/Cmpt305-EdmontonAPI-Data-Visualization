@@ -1,7 +1,7 @@
 public class Account {
     public String accountNumber, suite, houseNumber, streetName;
     public String neighborhoodId, neighborhood, ward;
-    public int assessedValue;
+    public float assessedValue;
     public double longitude, latitude;
     public boolean garage;
 
@@ -28,15 +28,10 @@ public class Account {
 
         // try to convert assessed value to int
         try {
-            assessedValue = Integer.parseInt(data[8]);
+            assessedValue = Float.parseFloat(data[8]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Assessed Value");
+            System.out.println("Invalid Assessed Value" + data[8]);
             throw new RuntimeException(e);
         }
-
-
-
     }
-
-
 }
