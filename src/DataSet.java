@@ -8,7 +8,7 @@ public class DataSet{
     int arrayLen;
 
     DataSet(String filePath){
-        arrayLen = countLines(filePath)-1;
+        arrayLen = countLines(filePath);
         accountList = new Account[arrayLen];
         readFile(filePath);
     }
@@ -39,13 +39,17 @@ public class DataSet{
         }
     }
 
+    // Counts number of entries in csv file
+    // Skips header line
     public int countLines(String filePath)  {
 
         int counter = 0;
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
-            while(br.readLine()!=null){
+            String line;
+            while((line=br.readLine())!=null){
+                if(line.split(",")[0].equals("Account Number")){continue;} //Skip header Line
                 counter++;
             }
         } catch (IOException e) {
