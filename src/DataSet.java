@@ -8,7 +8,7 @@ public class DataSet{
     int arrayLen;
 
     DataSet(String filePath){
-        arrayLen = countLines(filePath);
+        arrayLen = countLines(filePath)-1;
         accountList = new Account[arrayLen];
         readFile(filePath);
     }
@@ -28,7 +28,9 @@ public class DataSet{
 
             while ((line=br.readLine())!= null & index < max){
                 // Read Line from file and split data
-                addEntry(line.split(splitChar));
+                String[] entry = line.split(splitChar);
+                if (entry[0].equals("Account Number")){continue;} // Skips Header
+                addEntry(entry); // Create Account object and append to array
                 index++;
 
             }
@@ -60,8 +62,8 @@ public class DataSet{
         entries++;
     }
 
-    public float getHighestValue(){
-        float max = 0;
+    public int getHighestValue(){
+        int max = 0;
         for (int i = 0; i < arrayLen; i++){
             if (accountList[i].assessedValue > max){
                 max = accountList[i].assessedValue;
@@ -70,10 +72,10 @@ public class DataSet{
         return max;
     }
 
-    public float getLowestValue(){
-        float min = 0;
-        for (int i = 0; i <= arrayLen; i++){
-            if (accountList[i].assessedValue > min){
+    public int getLowestValue(){
+        int min = 2147483646;
+        for (int i = 0; i < arrayLen; i++){
+            if (accountList[i].assessedValue < min){
                 min = accountList[i].assessedValue;
             }
         }
@@ -85,7 +87,7 @@ public class DataSet{
         boolean found = false;
         String[] wards = new String[25];
 
-        for (int i = 0; i <= arrayLen; i++){
+        for (int i = 0; i < arrayLen; i++){
 
             for (int o = 0; o<=25; o++){
                 if (accountList[i].ward.equals(wards[o])) {
