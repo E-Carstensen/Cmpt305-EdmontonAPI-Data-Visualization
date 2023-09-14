@@ -6,13 +6,8 @@ public class Account {
     public boolean garage;
     public String class1, class2, class3;
     public int class1Percent, class2Percent, class3Percent;
-
-
-    public static void main(String[] args) {
-    }
-
     //Takes a line from csv data set and assigns values to object variables
-    public void assignData(String[] data){
+    Account(String[] data){
         // Order of data points in csv file
         // Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,
         // Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,

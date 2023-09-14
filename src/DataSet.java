@@ -30,14 +30,14 @@ public class DataSet{
 
             while ((line=br.readLine())!= null & index < max){
                 if (line.equals(("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3"))){
-
+                    continue;
                 }
 
 
                 // Read Line from file and split data
                 String[] entry = line.split(splitChar);
 
-                if (entry[0].equals("Account Number")){continue;} // Skips Header
+                //if (entry[0].equals("Account Number")){continue;} // Skips Header
 
                 addEntry(entry); // Create Account object and append to array
                 index++;
@@ -70,8 +70,7 @@ public class DataSet{
     }
 
     public void addEntry(String[] data){
-        accountList[entries] = new Account();
-        accountList[entries].assignData(data);
+        accountList[entries] = new Account(data);
         entries++;
     }
 
