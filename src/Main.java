@@ -10,6 +10,7 @@ public class Main {
         System.out.println("Highest Value: " + dataSet.getHighestValue());
         System.out.println("Lowest Value: " + dataSet.getLowestValue());
         System.out.println("Number of Unique Wards: " + dataSet.getNumberUniqueWards());
+        System.out.println("Number of Assessment Classes: " + dataSet.getNumberAssessmentClasses());
 
     }
 }

@@ -1,4 +1,3 @@
-import javax.security.auth.login.AccountLockedException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class DataSet{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
 
             while ((line=br.readLine())!= null & index < max){
-                if (line.equals(("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3"))){
+                if(line.equals(("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3"))){
 
                 }
 
@@ -121,10 +120,11 @@ public class DataSet{
             if(!(classes.contains(accountList[i].class2)) & accountList[i].class2 != null){
                 classes.add(accountList[i].class2);
             }
-            if(!(classes.contains(accountList[i].class2)) & accountList[i].class3 != null){
-                classes.add(accountList[i].class2);
+            if(!(classes.contains(accountList[i].class3)) & accountList[i].class3 != null){
+                classes.add(accountList[i].class3);
             }
         }
+        //System.out.println((classes.toString()));
         return classes.size();
 
     }
