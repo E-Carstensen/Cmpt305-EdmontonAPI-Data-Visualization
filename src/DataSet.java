@@ -95,10 +95,10 @@ public class DataSet{
         return min;
     }
 
-    public int getUniqueWards(){
+    public int getNumberUniqueWards(){
         int count = 0;
 
-        List<String> wards = new ArrayList<String>();
+        List<String> wards = new ArrayList<>();
 
         for (int i = 0; i < arrayLen; i++){
             if(!(wards.contains(accountList[i].ward))){
@@ -111,9 +111,8 @@ public class DataSet{
         return count;
     }
 
-    public int getAssessmentClasses(){
-        int count = 0;
-        List<String> classes = new ArrayList<String>();
+    public int getNumberAssessmentClasses(){
+        List<String> classes = new ArrayList<>();
 
         for (int i = 0; i < arrayLen; i++){
             if(!(classes.contains(accountList[i].class1)) & accountList[i].class1 != null){

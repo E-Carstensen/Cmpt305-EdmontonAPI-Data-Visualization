@@ -9,7 +9,7 @@ public class Main {
         System.out.println("Number of Entries: " + dataSet.arrayLen);
         System.out.println("Highest Value: " + dataSet.getHighestValue());
         System.out.println("Lowest Value: " + dataSet.getLowestValue());
-        System.out.println("Number of Unique Wards: " + dataSet.getUniqueWards());
+        System.out.println("Number of Unique Wards: " + dataSet.getNumberUniqueWards());
 
     }
 }
