@@ -1,3 +1,4 @@
+import javax.security.auth.login.AccountLockedException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,9 +29,16 @@ public class DataSet{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
 
             while ((line=br.readLine())!= null & index < max){
+                if (line.equals(("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3"))){
+
+                }
+
+
                 // Read Line from file and split data
                 String[] entry = line.split(splitChar);
+
                 if (entry[0].equals("Account Number")){continue;} // Skips Header
+
                 addEntry(entry); // Create Account object and append to array
                 index++;
 
@@ -104,8 +112,21 @@ public class DataSet{
     }
 
     public int getAssessmentClasses(){
-        count = 0;
-        List<String> wards = new ArrayList<String>();
+        int count = 0;
+        List<String> classes = new ArrayList<String>();
+
+        for (int i = 0; i < arrayLen; i++){
+            if(!(classes.contains(accountList[i].class1)) & accountList[i].class1 != null){
+                classes.add(accountList[i].class1);
+            }
+            if(!(classes.contains(accountList[i].class2)) & accountList[i].class2 != null){
+                classes.add(accountList[i].class2);
+            }
+            if(!(classes.contains(accountList[i].class2)) & accountList[i].class3 != null){
+                classes.add(accountList[i].class2);
+            }
+        }
+        return classes.size();
 
     }
 

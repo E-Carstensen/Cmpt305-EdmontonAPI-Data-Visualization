@@ -26,16 +26,18 @@ public class Account {
         neighborhoodId = data[5];
         neighborhood = data[6];
         ward =  data[7];
-        class1 = data[12];
-        class2 = data[13];
-        class3 = data[14];
+        class1 = data[14];
+        class2 = data[15];
+        class3 = data[16];
 
         // try to convert assessed value to int
         try {
             assessedValue = Integer.parseInt(data[8]);
-            class1Percent = Integer.parseInt(data[9]);
-            class2Percent = Integer.parseInt(data[10]);
-            class3Percent = Integer.parseInt(data[11]);
+            latitude = Double.parseDouble(data[9]);
+            longitude = Double.parseDouble(data[10]);
+            class1Percent = Integer.parseInt(data[11]);
+            class2Percent = Integer.parseInt(data[12]);
+            class3Percent = Integer.parseInt(data[13]);
         } catch (NumberFormatException e) {
             System.out.println("Invalid Assessed Value: " + data[8]);
             throw new RuntimeException(e);
