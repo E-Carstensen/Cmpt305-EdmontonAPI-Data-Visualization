@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.*;
 
 public class DataSet{
     Account[] accountList;
@@ -88,26 +89,24 @@ public class DataSet{
 
     public int getUniqueWards(){
         int count = 0;
-        boolean found = false;
-        String[] wards = new String[25];
+
+        List<String> wards = new ArrayList<String>();
 
         for (int i = 0; i < arrayLen; i++){
-
-            for (int o = 0; o<=25; o++){
-                if (accountList[i].ward.equals(wards[o])) {
-                    found = true;
-                    break;
-                } if(wards[o] == null){break;}
-            }
-
-            if(!(found)){
-                wards[count] = accountList[i].ward;
+            if(!(wards.contains(accountList[i].ward))){
+                wards.add(accountList[i].ward);
                 count++;
             }
-            found = false;
+
         }
 
         return count;
+    }
+
+    public int getAssessmentClasses(){
+        count = 0;
+        List<String> wards = new ArrayList<String>();
+
     }
 
 }

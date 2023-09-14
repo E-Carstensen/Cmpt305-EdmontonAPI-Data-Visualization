@@ -4,7 +4,8 @@ public class Account {
     public int assessedValue;
     public double longitude, latitude;
     public boolean garage;
-
+    public String class1, class2, class3;
+    public int class1Percent, class2Percent, class3Percent;
 
 
     public static void main(String[] args) {
@@ -25,12 +26,18 @@ public class Account {
         neighborhoodId = data[5];
         neighborhood = data[6];
         ward =  data[7];
+        class1 = data[12];
+        class2 = data[13];
+        class3 = data[14];
 
         // try to convert assessed value to int
         try {
             assessedValue = Integer.parseInt(data[8]);
+            class1Percent = Integer.parseInt(data[9]);
+            class2Percent = Integer.parseInt(data[10]);
+            class3Percent = Integer.parseInt(data[11]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Assessed Value" + data[8]);
+            System.out.println("Invalid Assessed Value: " + data[8]);
             throw new RuntimeException(e);
         }
     }
