@@ -6,7 +6,6 @@ import java.util.*;
 public class DataSet{
     ArrayList<Account> accountList = new ArrayList<>();
     int entries = 0;
-    int arrayLen;
 
     DataSet(String filePath){ // Constructor
          // init Array
@@ -39,7 +38,7 @@ public class DataSet{
     }
 
     // Counts number of entries in csv file
-    // Skips header line
+    // Skips header line if there
     public int countLines(String filePath)  {
 
         int counter = 0;
@@ -47,8 +46,14 @@ public class DataSet{
         try{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
-            while((line=br.readLine())!=null){
-                //if(line.split(",")[0].equals("Account Number")){continue;} //Skip header Line
+
+            line = br.readLine();
+            if(line != null && !line.split(",")[0].equals("Account Number")){
+                counter++; // If first line is not a header count it
+            }
+
+            // After count every line
+            while((br.readLine())!=null){
                 counter++;
             }
         } catch (IOException e) {

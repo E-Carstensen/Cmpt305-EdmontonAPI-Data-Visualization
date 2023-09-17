@@ -7,7 +7,6 @@ public class Account {
     public int assessedValue;
     public double longitude, latitude;
     public boolean garage;
-    public int class1Percent, class2Percent, class3Percent;
     String point;
 
     Map<String, Integer> assessmentClasses = new HashMap<>();
