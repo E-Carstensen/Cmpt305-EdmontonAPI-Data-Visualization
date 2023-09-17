@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.util.*;
 
 public class DataSet{
-    Account[] accountList;
+    ArrayList<Account> accountList = new ArrayList<>();
     int entries = 0;
     int arrayLen;
 
-    DataSet(String filePath){
-        arrayLen = countLines(filePath);
-        accountList = new Account[arrayLen];
-        readFile(filePath);
+    DataSet(String filePath){ // Constructor
+         // init Array
+        readFile(filePath); // Read lines into array
     }
 
     public void readFile(String filePath){
@@ -19,30 +18,22 @@ public class DataSet{
         String line;
         String splitChar = ",";
 
-        // Init counter and array for Accounts
-        int index = 0;
-        int max = arrayLen;
-
         try{
 
             BufferedReader br = new BufferedReader(new FileReader(filePath));
 
-            while ((line=br.readLine())!= null & index < max){
-                if(line.equals(("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3"))){
-
+            while ((line=br.readLine())!= null){
+                if(line.equals("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3")){
+                    continue;
                 }
 
-
                 // Read Line from file and split data
-                String[] entry = line.split(splitChar);
-
-                if (entry[0].equals("Account Number")){continue;} // Skips Header
-
+                String[] entry = line.split(splitChar, -1);
                 addEntry(entry); // Create Account object and append to array
-                index++;
 
             }
         } catch (IOException e) {
+            System.out.println(" ");
             throw new RuntimeException(e);
         }
     }
@@ -57,7 +48,7 @@ public class DataSet{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
             while((line=br.readLine())!=null){
-                if(line.split(",")[0].equals("Account Number")){continue;} //Skip header Line
+                //if(line.split(",")[0].equals("Account Number")){continue;} //Skip header Line
                 counter++;
             }
         } catch (IOException e) {
@@ -69,64 +60,48 @@ public class DataSet{
     }
 
     public void addEntry(String[] data){
-        accountList[entries] = new Account();
-        accountList[entries].assignData(data);
+        Account newAccount = new Account();
+        newAccount.assignData(data);
+        accountList.add(newAccount);
         entries++;
     }
 
     public int getHighestValue(){
-        int max = 0;
-        for (int i = 0; i < arrayLen; i++){
-            if (accountList[i].assessedValue > max){
-                max = accountList[i].assessedValue;
+        int max = -1;
+        for (Account account : accountList){
+            if (account.assessedValue > max){
+                max = account.assessedValue;
             }
         }
         return max;
     }
 
     public int getLowestValue(){
-        int min = 2147483646;
-        for (int i = 0; i < arrayLen; i++){
-            if (accountList[i].assessedValue < min){
-                min = accountList[i].assessedValue;
+        int min = Integer.MAX_VALUE;
+        for (Account account : accountList){
+            if (account.assessedValue < min){
+                min = account.assessedValue;
             }
         }
         return min;
     }
 
-    public int getNumberUniqueWards(){
-        int count = 0;
-
-        List<String> wards = new ArrayList<>();
-
-        for (int i = 0; i < arrayLen; i++){
-            if(!(wards.contains(accountList[i].ward))){
-                wards.add(accountList[i].ward);
-                count++;
-            }
-
+    public int countUniqueWards(){
+        Set<String> wards = new HashSet<>();
+        for (Account account : accountList){
+            wards.add(account.ward);
         }
 
-        return count;
+        return wards.size();
     }
 
-    public int getNumberAssessmentClasses(){
-        List<String> classes = new ArrayList<>();
+    public int countAssessmentClasses() {
+        Set<String> uniqueClasses = new HashSet<>();
 
-        for (int i = 0; i < arrayLen; i++){
-            if(!(classes.contains(accountList[i].class1)) & accountList[i].class1 != null){
-                classes.add(accountList[i].class1);
-            }
-            if(!(classes.contains(accountList[i].class2)) & accountList[i].class2 != null){
-                classes.add(accountList[i].class2);
-            }
-            if(!(classes.contains(accountList[i].class3)) & accountList[i].class3 != null){
-                classes.add(accountList[i].class3);
-            }
+        for (Account account : accountList) {
+            uniqueClasses.addAll((account.assessmentClasses.keySet()));
+
         }
-        //System.out.println((classes.toString()));
-        return classes.size();
-
+        return uniqueClasses.size();
     }
-
 }
