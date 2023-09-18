@@ -1,18 +1,15 @@
-import javax.security.auth.login.AccountLockedException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
 public class DataSet{
-    Account[] accountList;
+    ArrayList<Account> accountList = new ArrayList<>();
     int entries = 0;
-    int arrayLen;
 
-    DataSet(String filePath){
-        arrayLen = countLines(filePath);
-        accountList = new Account[arrayLen];
-        readFile(filePath);
+    DataSet(String filePath){ // Constructor
+         // init Array
+        readFile(filePath); // Read lines into array
     }
 
     public void readFile(String filePath){
@@ -20,36 +17,28 @@ public class DataSet{
         String line;
         String splitChar = ",";
 
-        // Init counter and array for Accounts
-        int index = 0;
-        int max = arrayLen;
-
         try{
 
             BufferedReader br = new BufferedReader(new FileReader(filePath));
 
-            while ((line=br.readLine())!= null & index < max){
-                if (line.equals(("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3"))){
+            while ((line=br.readLine())!= null){
+                if(line.equals("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3")){
                     continue;
                 }
 
-
                 // Read Line from file and split data
-                String[] entry = line.split(splitChar);
-
-                //if (entry[0].equals("Account Number")){continue;} // Skips Header
-
+                String[] entry = line.split(splitChar, -1);
                 addEntry(entry); // Create Account object and append to array
-                index++;
 
             }
         } catch (IOException e) {
+            System.out.println(" ");
             throw new RuntimeException(e);
         }
     }
 
     // Counts number of entries in csv file
-    // Skips header line
+    // Skips header line if there
     public int countLines(String filePath)  {
 
         int counter = 0;
@@ -57,8 +46,14 @@ public class DataSet{
         try{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
-            while((line=br.readLine())!=null){
-                if(line.split(",")[0].equals("Account Number")){continue;} //Skip header Line
+
+            line = br.readLine();
+            if(line != null && !line.split(",")[0].equals("Account Number")){
+                counter++; // If first line is not a header count it
+            }
+
+            // After count every line
+            while((br.readLine())!=null){
                 counter++;
             }
         } catch (IOException e) {
@@ -70,62 +65,48 @@ public class DataSet{
     }
 
     public void addEntry(String[] data){
-        accountList[entries] = new Account(data);
+        Account newAccount = new Account();
+        newAccount.assignData(data);
+        accountList.add(newAccount);
         entries++;
     }
 
     public int getHighestValue(){
-        int max = 0;
-        for (int i = 0; i < arrayLen; i++){
-            if (accountList[i].assessedValue > max){
-                max = accountList[i].assessedValue;
+        int max = -1;
+        for (Account account : accountList){
+            if (account.assessedValue > max){
+                max = account.assessedValue;
             }
         }
         return max;
     }
 
     public int getLowestValue(){
-        int min = 2147483646;
-        for (int i = 0; i < arrayLen; i++){
-            if (accountList[i].assessedValue < min){
-                min = accountList[i].assessedValue;
+        int min = Integer.MAX_VALUE;
+        for (Account account : accountList){
+            if (account.assessedValue < min){
+                min = account.assessedValue;
             }
         }
         return min;
     }
 
-    public int getNumberUniqueWards(){
-        int count = 0;
-
-        List<String> wards = new ArrayList<>();
-
-        for (int i = 0; i < arrayLen; i++){
-            if(!(wards.contains(accountList[i].ward))){
-                wards.add(accountList[i].ward);
-                count++;
-            }
-
+    public int countUniqueWards(){
+        Set<String> wards = new HashSet<>();
+        for (Account account : accountList){
+            wards.add(account.ward);
         }
 
-        return count;
+        return wards.size();
     }
 
-    public int getNumberAssessmentClasses(){
-        List<String> classes = new ArrayList<>();
+    public int countAssessmentClasses() {
+        Set<String> uniqueClasses = new HashSet<>();
 
-        for (int i = 0; i < arrayLen; i++){
-            if(!(classes.contains(accountList[i].class1)) & accountList[i].class1 != null){
-                classes.add(accountList[i].class1);
-            }
-            if(!(classes.contains(accountList[i].class2)) & accountList[i].class2 != null){
-                classes.add(accountList[i].class2);
-            }
-            if(!(classes.contains(accountList[i].class2)) & accountList[i].class3 != null){
-                classes.add(accountList[i].class2);
-            }
+        for (Account account : accountList) {
+            uniqueClasses.addAll((account.assessmentClasses.keySet()));
+
         }
-        return classes.size();
-
+        return uniqueClasses.size();
     }
-
 }
