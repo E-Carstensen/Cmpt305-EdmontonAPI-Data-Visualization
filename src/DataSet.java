@@ -6,6 +6,13 @@ import java.util.*;
 public class DataSet{
     ArrayList<Account> accountList = new ArrayList<>();
     int entries = 0;
+    int max = -1;
+    int min = Integer.MAX_VALUE;
+    double mean = 0;
+    int median = 0;
+    int n = 0;
+
+
 
     DataSet(String filePath){ // Constructor
          // init Array
@@ -18,9 +25,7 @@ public class DataSet{
         String splitChar = ",";
 
         try{
-
             BufferedReader br = new BufferedReader(new FileReader(filePath));
-
             while ((line=br.readLine())!= null){
                 if(line.equals("Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,Assessment Class 1,Assessment Class 2,Assessment Class 3")){
                     continue;
@@ -32,43 +37,30 @@ public class DataSet{
 
             }
         } catch (IOException e) {
-            System.out.println(" ");
-            throw new RuntimeException(e);
+            System.out.println("Failed to read file in Dataset.readFile() after " + entries + " lines");
         }
     }
 
-    // Counts number of entries in csv file
-    // Skips header line if there
-    public int countLines(String filePath)  {
-
-        int counter = 0;
-
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
-            String line;
-
-            line = br.readLine();
-            if(line != null && !line.split(",")[0].equals("Account Number")){
-                counter++; // If first line is not a header count it
-            }
-
-            // After count every line
-            while((br.readLine())!=null){
-                counter++;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return counter;
-
-    }
 
     public void addEntry(String[] data){
         Account newAccount = new Account();
         newAccount.assignData(data);
         accountList.add(newAccount);
-        entries++;
+        this.entries++;
+    }
+
+    public void getStats(){
+        int n = 0;
+        int total = 0;
+        for (Account account : accountList) {
+            n++;
+            if (account.assessedValue > max) {this.max = account.assessedValue;}
+            if (account.assessedValue < min) {this.min = account.assessedValue;}
+            if (n == accountList.size()/2) {this.median = account.assessedValue;}
+            total += account.assessedValue;
+        }
+
+        this.mean = total/n;
     }
 
     public int getHighestValue(){
