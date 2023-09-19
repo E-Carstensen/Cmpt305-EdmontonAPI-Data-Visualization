@@ -6,11 +6,14 @@ import java.util.*;
 public class DataSet{
     ArrayList<Account> accountList = new ArrayList<>();
     int entries = 0;
-    int max = -1;
-    int min = Integer.MAX_VALUE;
+    int maxValue = -1;
+    int minValue = Integer.MAX_VALUE;
     double mean = 0;
-    int median = 0;
-    int n = 0;
+    double median = 0;
+    Set<String> wards = new HashSet<>();
+    Set<String> uniqueClasses = new HashSet<>();
+
+
 
 
 
@@ -51,54 +54,45 @@ public class DataSet{
 
     public void getStats(){
         int n = 0;
-        int total = 0;
+        double total = 0;
+        int[] values = new int[this.entries]; // Array for all assessed values to find median
         for (Account account : accountList) {
+            values[n] = account.assessedValue;
             n++;
-            if (account.assessedValue > max) {this.max = account.assessedValue;}
-            if (account.assessedValue < min) {this.min = account.assessedValue;}
-            if (n == accountList.size()/2) {this.median = account.assessedValue;}
-            total += account.assessedValue;
+            // Check for and save min and max assessed values
+            if (account.assessedValue > this.maxValue) {this.maxValue = account.assessedValue;}
+            if (account.assessedValue < this.minValue) {this.minValue = account.assessedValue;}
+
+            total = (total + account.assessedValue);
+            // Keep track of unique wards and assessment classes
+            this.wards.add(account.ward);
+            this.uniqueClasses.addAll((account.assessmentClasses.keySet()));
+
         }
 
-        this.mean = total/n;
+        // Sort assessment values
+        Arrays.sort(values);
+
+        // Calculate the median
+        if (n % 2 == 0) { // In n is even, take average of both sides of middle
+            this.median = ((values[n / 2 - 1] + values[n / 2]) / 2.0);
+        } else { // Else take exact middle
+            this.median = values[n / 2];
+        }
+        this.mean = (total/(n));
     }
 
     public int getHighestValue(){
-        int max = -1;
-        for (Account account : accountList){
-            if (account.assessedValue > max){
-                max = account.assessedValue;
-            }
-        }
-        return max;
+        return this.maxValue;
     }
 
     public int getLowestValue(){
-        int min = Integer.MAX_VALUE;
-        for (Account account : accountList){
-            if (account.assessedValue < min){
-                min = account.assessedValue;
-            }
-        }
-        return min;
+        return this.minValue;
     }
 
-    public int countUniqueWards(){
-        Set<String> wards = new HashSet<>();
-        for (Account account : accountList){
-            wards.add(account.ward);
-        }
-
-        return wards.size();
-    }
+    public int countUniqueWards(){return this.wards.size();}
 
     public int countAssessmentClasses() {
-        Set<String> uniqueClasses = new HashSet<>();
-
-        for (Account account : accountList) {
-            uniqueClasses.addAll((account.assessmentClasses.keySet()));
-
-        }
-        return uniqueClasses.size();
+        return this.uniqueClasses.size();
     }
 }

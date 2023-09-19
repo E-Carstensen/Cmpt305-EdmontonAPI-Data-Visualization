@@ -1,6 +1,7 @@
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Main {
@@ -14,20 +15,20 @@ public class Main {
         displayStats(dataSet);
 
 
-
-
     }
 
 
     public static void displayStats(DataSet dataSet){
-        if(dataSet.max == -1){dataSet.getStats();} // If stats have not yet been calculated
+        if(dataSet.maxValue == -1){dataSet.getStats();} // If stats have not yet been calculated
+
+        DecimalFormat dollar = new DecimalFormat("$#,##0");
 
         System.out.println("Number of Entries: " + dataSet.entries);
-        System.out.println("Highest Value: " + dataSet.max);
-        System.out.println("Lowest Value: " + dataSet.min);
-        System.out.println("Range: " + (dataSet.max - dataSet.min));
-        System.out.println("Mean Value: " + dataSet.mean);
-        System.out.println("Median Value: " + dataSet.median);
+        System.out.println("Highest Value: " + dollar.format(dataSet.maxValue));
+        System.out.println("Lowest Value: " + dollar.format(dataSet.minValue));
+        System.out.println("Range: " + dollar.format((dataSet.maxValue - dataSet.minValue)));
+        System.out.println("Mean Value: " + dollar.format(dataSet.mean));
+        System.out.println("Median Value: " + dollar.format(dataSet.median));
     }
 
     public static String getUserInput(){
