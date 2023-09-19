@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Account {
+public class Account implements Comparable<Account> {
     public String accountNumber, suite, houseNumber, streetName;
     public String neighborhoodId, neighborhood, ward;
     public int assessedValue;
@@ -59,15 +59,23 @@ public class Account {
     public String toString(){
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Account ID: ").append(this.accountNumber);
+        sb.append("\nAccount ID: ").append(this.accountNumber);
         sb.append("\nAddress: ").append(this.address);
         sb.append("\nAssessed Value: ").append(this.assessedValue);
         sb.append("\nAssessment Class: ").append(this.assessmentClasses);
         sb.append("\nNeighborhood: ").append(this.neighborhood);
+        sb.append("(").append(this.ward).append(")");
         sb.append("\nLocation: ").append(this.point);
 
 
 
         return sb.toString();
     }
+
+    @Override
+    public int compareTo(Account a1) {
+        return Integer.compare(this.assessedValue, a1.assessedValue);
+    }
+
+
 }

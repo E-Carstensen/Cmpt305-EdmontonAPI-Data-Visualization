@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,13 +13,16 @@ public class Main {
         if (filePath.isBlank()){return;}
 
         DataSet dataSet = new DataSet(filePath);
-        displayStats(dataSet);
+        displayDataSetStats(dataSet);
+
+        displayAccountStats(dataSet);
+
 
 
     }
 
 
-    public static void displayStats(DataSet dataSet){
+    public static void displayDataSetStats(DataSet dataSet){
         if(dataSet.maxValue == -1){dataSet.getStats();} // If stats have not yet been calculated
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
@@ -31,11 +35,29 @@ public class Main {
         System.out.println("Median Value: " + dollar.format(dataSet.median));
     }
 
+    public static void displayAccountStats(DataSet dataSet){
+        System.out.print("Find property by account number: ");
+        String accountId = getUserInput();
+
+        for (Account account : dataSet.accountList){
+            if (account.accountNumber.equals(accountId)){
+                System.out.println(account);
+                return;
+            }
+        }
+        System.out.println("Account Not Found...");
+    }
+
+    public static void displayNeighborhoodStats(DataSet dataSet){
+        System.out.print("Neighborhood: ");
+        String neighborhood;
+
+    }
+
     public static String getUserInput(){
         Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine();
-        sc.close();
-        return input;
+        //sc.close();
+        return sc.nextLine();
     }
 
 

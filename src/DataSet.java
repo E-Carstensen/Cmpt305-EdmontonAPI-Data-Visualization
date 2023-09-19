@@ -12,6 +12,7 @@ public class DataSet{
     double median = 0;
     Set<String> wards = new HashSet<>();
     Set<String> uniqueClasses = new HashSet<>();
+    public Account[] sortedAccounts;
 
 
 
@@ -55,9 +56,11 @@ public class DataSet{
     public void getStats(){
         int n = 0;
         double total = 0;
-        int[] values = new int[this.entries]; // Array for all assessed values to find median
+        this.sortedAccounts = new Account[this.entries];
+       // int[] values = new int[this.entries]; // Array for all assessed values to find median
         for (Account account : accountList) {
-            values[n] = account.assessedValue;
+            //values[n] = account.assessedValue;
+            sortedAccounts[n] = account;
             n++;
             // Check for and save min and max assessed values
             if (account.assessedValue > this.maxValue) {this.maxValue = account.assessedValue;}
@@ -71,13 +74,14 @@ public class DataSet{
         }
 
         // Sort assessment values
-        Arrays.sort(values);
+        //Arrays.sort(values);
+        Arrays.sort(sortedAccounts);
 
         // Calculate the median
         if (n % 2 == 0) { // In n is even, take average of both sides of middle
-            this.median = ((values[n / 2 - 1] + values[n / 2]) / 2.0);
+            this.median = ((sortedAccounts[n / 2 - 1].assessedValue + sortedAccounts[n / 2].assessedValue) / 2.0);
         } else { // Else take exact middle
-            this.median = values[n / 2];
+            this.median = sortedAccounts[n / 2].assessedValue;
         }
         this.mean = (total/(n));
     }
