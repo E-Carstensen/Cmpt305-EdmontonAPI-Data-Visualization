@@ -54,7 +54,8 @@ public class Main {
 
     public static void displayNeighborhoodStats(DataSet dataSet){
         System.out.print("Neighborhood: ");
-        String neighborhood;
+        String neighborhood = getUserInput();
+
 
     }
 

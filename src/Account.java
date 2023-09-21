@@ -41,24 +41,21 @@ public class Account implements Comparable<Account> {
         setLatitude(data[9]);
         setLongitude(data[10]);
         setPoint(data[11]);
-        setAssessmentClasses(data[12:14]);
+        setAssessmentClasses(data);
 
         address = new Address(this);
     }
 
     // Returns multiline String descriptor of property for printout
     public String toString(){
-        StringBuilder sb = new StringBuilder();
 
-        sb.append("\nAccount ID: ").append(this.accountNumber);
-        sb.append("\nAddress: ").append(this.address);
-        sb.append("\nAssessed Value: ").append(this.assessedValue);
-        sb.append("\nAssessment Class: ").append(this.assessmentClasses);
-        sb.append("\nNeighborhood: ").append(this.neighborhood);
-        sb.append(" - (").append(this.ward).append(")");
-        sb.append("\nLocation: ").append(this.point);
-
-        return sb.toString();
+        return "\nAccount ID: " + this.accountNumber +
+                "\nAddress: " + this.address +
+                "\nAssessed Value: " + this.assessedValue +
+                "\nAssessment Class: " + this.assessmentClasses +
+                "\nNeighborhood: " + this.neighborhood +
+                " - (" + this.ward + ")" +
+                "\nLocation: " + this.point;
     }
 
 
@@ -110,17 +107,20 @@ public class Account implements Comparable<Account> {
     public void setNeighborhood(String neighborhood){if(!neighborhood.isBlank()){this.neighborhood = neighborhood;}}
     public void setWard(String ward){if(!ward.isBlank()){this.ward = ward;}}
     public void setPoint(String point){if(!point.isBlank()){this.point = point;}}
+
+    // Takes String[] of split csv line, and assigns values to object variables
+    // Attempts to parse percentage into an integer
     public void setAssessmentClasses(String[] assessmentClasses){
         try {
             // Dictionary mapping an Assessment Type to a Percentage
-            if(!assessmentClasses[0].isEmpty()){
-                this.assessmentClasses.put(assessmentClasses[3], Integer.parseInt(assessmentClasses[0]));
+            if(!assessmentClasses[12].isEmpty()){
+                this.assessmentClasses.put(assessmentClasses[15], Integer.parseInt(assessmentClasses[12]));
             }
-            if (!assessmentClasses[1].isEmpty()) {
-                this.assessmentClasses.put(assessmentClasses[4], Integer.parseInt(assessmentClasses[1]));
+            if (!assessmentClasses[13].isEmpty()) {
+                this.assessmentClasses.put(assessmentClasses[16], Integer.parseInt(assessmentClasses[13]));
             }
-            if (!assessmentClasses[2].isEmpty()) {
-                this.assessmentClasses.put(assessmentClasses[5], Integer.parseInt(assessmentClasses[2]));
+            if (!assessmentClasses[14].isEmpty()) {
+                this.assessmentClasses.put(assessmentClasses[17], Integer.parseInt(assessmentClasses[14]));
             }
 
         } catch (NumberFormatException e) {
@@ -143,7 +143,7 @@ public class Account implements Comparable<Account> {
         }
     }
 
-
+    // Overrides compareTo method to compare two accounts by assessment values
     @Override
     public int compareTo(Account other) {
         return Integer.compare(this.assessedValue, other.assessedValue);

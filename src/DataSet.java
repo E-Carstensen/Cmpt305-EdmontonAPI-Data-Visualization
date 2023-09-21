@@ -21,6 +21,7 @@ public class DataSet{
     DataSet(String filePath){ // Constructor
          // init Array
         readFile(filePath); // Read lines into array
+        getStats();
     }
 
     public void readFile(String filePath){
@@ -74,14 +75,21 @@ public class DataSet{
         // Sort assessment values
         //Arrays.sort(values);
         Arrays.sort(sortedAccounts);
+        setMedian();
+
 
         // Calculate the median
-        if (n % 2 == 0) { // In n is even, take average of both sides of middle
-            this.median = ((sortedAccounts[n / 2 - 1].assessedValue + sortedAccounts[n / 2].assessedValue) / 2.0);
-        } else { // Else take exact middle
-            this.median = sortedAccounts[n / 2].assessedValue;
-        }
         this.mean = (total/(n));
+    }
+
+    public double setMedian() {
+        if (this.maxValue == -1){getStats();}
+        if (this.entries % 2 == 0) { // In n is even, take average of both sides of middle
+            this.median = ((sortedAccounts[entries / 2 - 1].assessedValue + sortedAccounts[entries / 2].assessedValue) / 2.0);
+        } else { // Else take exact middle
+            this.median = sortedAccounts[entries / 2].assessedValue;
+        }
+        return this.median;
     }
 
     public int getHighestValue(){
