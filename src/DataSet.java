@@ -72,7 +72,6 @@ public class DataSet{
             this.uniqueClasses.addAll((account.assessmentClasses.keySet()));
 
         }
-
         // Sort assessment values
         //Arrays.sort(values);
         Arrays.sort(sortedAccounts);

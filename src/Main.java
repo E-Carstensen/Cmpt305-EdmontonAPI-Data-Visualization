@@ -22,7 +22,9 @@ public class Main {
     }
 
 
-    public static void displayDataSetStats(DataSet dataSet){
+    public static void displayDataSetStats(Object obj){
+        if (!(obj instanceof DataSet dataSet)){return;}
+
         if(dataSet.maxValue == -1){dataSet.getStats();} // If stats have not yet been calculated
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
@@ -35,7 +37,9 @@ public class Main {
         System.out.println("Median Value: " + dollar.format(dataSet.median));
     }
 
-    public static void displayAccountStats(DataSet dataSet){
+    public static void displayAccountStats(Object obj){
+        if (!(obj instanceof DataSet dataSet)){return;}
+
         System.out.print("Find property by account number: ");
         String accountId = getUserInput();
 

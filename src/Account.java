@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class Account implements Comparable<Account> {
         }
     }
 
-
+    // Returns multiline descriptor of property for printout
     public String toString(){
         StringBuilder sb = new StringBuilder();
 
@@ -72,9 +73,56 @@ public class Account implements Comparable<Account> {
         return sb.toString();
     }
 
+
+    // Sets assessed value - Enforces positive
+    public void setAssessedValue(Object obj){
+        if (obj instanceof Integer value){
+            if (value > 0) {
+                this.assessedValue = value;
+                return;
+            }
+        }
+        if (obj instanceof Double value) {
+            if (value > 0) {
+                this.assessedValue = value.intValue();
+                return;
+            }
+        }
+        if (obj instanceof String value) {
+            try {
+                int valueInt = Integer.parseInt(value);
+                if (valueInt > 0) {
+                    this.assessedValue = valueInt;
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid Assessed Value: " + e);
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("Invalid Assessed Value: " + obj);
+
+    }
+
+    public void setSuite(String suite){this.suite = suite;}
+
+    public void setAccountNumber(String acctNum){
+        if(!acctNum.isBlank()){this.accountNumber = acctNum;}
+    }
+    public void setHouseNumber(String houseNumber){if(!houseNumber.isBlank()){this.houseNumber = houseNumber;}}
+    public void setStreetName(String streetName){if(!streetName.isBlank()){this.streetName = streetName;}}
+    public void setGarage(boolean garage){this.garage = garage;}
+    public void setNeighborhoodId(String neighborhoodId){if(!neighborhoodId.isBlank()){this.neighborhoodId = neighborhoodId;}}
+    public void setNeighborhood(String neighborhood){if(!neighborhood.isBlank()){this.neighborhood = neighborhood;}}
+    public void setWard(String ward){if(!ward.isBlank()){this.ward = ward;}}
+    public void setPoint(String point){if(!point.isBlank()){this.point = point;}}
+    public
+
+
+
     @Override
-    public int compareTo(Account a1) {
-        return Integer.compare(this.assessedValue, a1.assessedValue);
+    public int compareTo(Account other) {
+        return Integer.compare(this.assessedValue, other.assessedValue);
     }
 
 
