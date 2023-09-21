@@ -47,8 +47,7 @@ public class DataSet{
 
 
     public void addEntry(String[] data){
-        Account newAccount = new Account();
-        newAccount.assignData(data);
+        Account newAccount = new Account(data);
         accountList.add(newAccount);
         this.entries++;
     }
