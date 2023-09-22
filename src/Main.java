@@ -13,6 +13,8 @@ public class Main {
         if (filePath.isBlank()){return;}
 
         DataSet dataSet = new DataSet(filePath);
+
+
         displayDataSetStats(dataSet);
 
         displayAccountStats(dataSet);
@@ -22,30 +24,29 @@ public class Main {
     }
 
 
-    public static void displayDataSetStats(Object obj){
-        if (!(obj instanceof DataSet dataSet)){return;}
+    public static void displayDataSetStats(DataSet dataSet){
 
-        if(dataSet.maxValue == -1){dataSet.getStats();} // If stats have not yet been calculated
+        if(dataSet.maxValue == -1){dataSet.setSortedAccounts();} // If stats have not yet been calculated
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
 
         System.out.println("Number of Entries: " + dataSet.entries);
-        System.out.println("Highest Value: " + dollar.format(dataSet.maxValue));
-        System.out.println("Lowest Value: " + dollar.format(dataSet.minValue));
+        System.out.println("Highest Value: " + dollar.format(dataSet.getHighestValue()));
+        System.out.println("Lowest Value: " + dollar.format(dataSet.getLowestValue()));
         System.out.println("Range: " + dollar.format((dataSet.maxValue - dataSet.minValue)));
-        System.out.println("Mean Value: " + dollar.format(dataSet.mean));
-        System.out.println("Median Value: " + dollar.format(dataSet.median));
+        System.out.println("Mean Value: " + dollar.format(dataSet.getMean()));
+        System.out.println("Median Value: " + dollar.format(dataSet.getMedian()));
     }
 
-    public static void displayAccountStats(Object obj){
-        if (!(obj instanceof DataSet dataSet)){return;}
+
+    public static void displayAccountStats(DataSet dataSet){
 
         System.out.print("Find property by account number: ");
         String accountId = getUserInput();
 
         for (Account account : dataSet.accountList){
             if (account.accountNumber.equals(accountId)){
-                System.out.println(account);
+                System.out.println(account); //TODO format assessment classes better
                 return;
             }
         }
@@ -59,6 +60,7 @@ public class Main {
 
     }
 
+    // Takes one line from the user and returns it as a string
     public static String getUserInput(){
         Scanner sc = new Scanner(System.in);
         //sc.close();
@@ -71,14 +73,17 @@ public class Main {
         System.out.print("CSV Filename: "); // Prompt user to input local csv file name
         String input = getUserInput();
 
-        if (input.isBlank()){input = "test.csv";} // For easier debugging, remove in future
+        if (input.isBlank()){input = "test.csv";} // TODO REMOVE For easier debugging, remove in future
 
         Path path = Paths.get("src", input);
-        if(!Files.exists(path)){ // Ensure file exists
-            System.out.println("File Not Found... Exiting");
-            return "";
+        while(!Files.exists(path)){ // While file does not exist
+            System.out.println("File Not Found");
+            System.out.print("CSV Filename ('n' to quit): "); // Prompt user to input local csv file name again
+            input = getUserInput();
+            if (input.equals("n")){return "";} // Allow user to quit program
+
         }
-        return path.toAbsolutePath().toString();
+        return path.toAbsolutePath().toString(); // Return absolute path to file as a string
     }
 
 }

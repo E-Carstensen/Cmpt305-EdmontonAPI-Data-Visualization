@@ -1,4 +1,3 @@
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,35 +45,27 @@ public class Account implements Comparable<Account> {
         address = new Address(this);
     }
 
-    // Returns multiline String descriptor of property for printout
+    // Overrides toString() method to return multiline String descriptor of property for printout
+    // Includes account number, address, assessed value, assessment classes, neighborhood, ward, and point
+    // Adds string header to identify each variable
+    // @return multiline String descriptor of property for printout
     public String toString(){
 
-        return "\nAccount ID: " + this.accountNumber +
-                "\nAddress: " + this.address +
-                "\nAssessed Value: " + this.assessedValue +
+        return "\nAccount ID:        " + this.accountNumber +
+                "\nAddress:          " + this.address +
+                "\nAssessed Value:   " + this.assessedValue +
                 "\nAssessment Class: " + this.assessmentClasses +
-                "\nNeighborhood: " + this.neighborhood +
+                "\nNeighborhood:     " + this.neighborhood +
                 " - (" + this.ward + ")" +
-                "\nLocation: " + this.point;
+                "\nLocation:         " + this.point;
     }
 
 
     // Sets assessed value - Enforces positive
-    // Will convert strings and double to integer
-    // If value is negative will not change existing assessedValue
+    // Will convert strings and double to integer, if invalid will not change existing value and display error
+    // If input is negative will not change existing assessedValue and return
+    // @param new value for this.assessed value as integer, string or double
     public void setAssessedValue(Object obj){
-        if (obj instanceof Integer value){
-            if (value > 0) {
-                this.assessedValue = value;
-                return;
-            }
-        }
-        if (obj instanceof Double value) {
-            if (value > 0) {
-                this.assessedValue = value.intValue();
-                return;
-            }
-        }
         if (obj instanceof String value) {
             try {
                 int valueInt = Integer.parseInt(value);
@@ -84,10 +75,20 @@ public class Account implements Comparable<Account> {
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid Assessed Value: " + e);
-                throw new RuntimeException(e);
             }
         }
-        System.out.println("Invalid Assessed Value: " + obj);
+        if (obj instanceof Integer value){
+            if (value > 0) {
+                this.assessedValue = value;
+                return;
+            }
+        }
+        if (obj instanceof Double value) {
+            if (value > 0) {
+                this.assessedValue = value.intValue();
+            }
+        }
+
 
     }
 
@@ -101,19 +102,25 @@ public class Account implements Comparable<Account> {
     public void setHouseNumber(String houseNumber){if(!houseNumber.isBlank()){this.houseNumber = houseNumber;}}
     public void setStreetName(String streetName){if(!streetName.isBlank()){this.streetName = streetName;}}
 
-    // Takes String
+    // Takes String column from csv and converts string "Y/N" to boolean
+    // Y == true; Any other value is false
     public void setGarage(String garage){this.garage = garage.equals("Y");}
     public void setNeighborhoodId(String neighborhoodId){if(!neighborhoodId.isBlank()){this.neighborhoodId = neighborhoodId;}}
     public void setNeighborhood(String neighborhood){if(!neighborhood.isBlank()){this.neighborhood = neighborhood;}}
     public void setWard(String ward){if(!ward.isBlank()){this.ward = ward;}}
     public void setPoint(String point){if(!point.isBlank()){this.point = point;}}
 
-    // Takes String[] of split csv line, and assigns values to object variables
-    // Attempts to parse percentage into an integer
+
+
+    // Takes String[] of split csv line and assigns a map of assessment classes to percentage
+    // Not all properties have multiple assessment classes, so we need to check if the column contains a percentage
+    // Attempts to parse String percentage into an integer
+    // Will display error message if percentage is not an integer and return
+    // @param assessmentClasses String[] of split csv line
     public void setAssessmentClasses(String[] assessmentClasses){
         try {
             // Dictionary mapping an Assessment Type to a Percentage
-            if(!assessmentClasses[12].isEmpty()){
+            if(!assessmentClasses[12].isEmpty()){ //
                 this.assessmentClasses.put(assessmentClasses[15], Integer.parseInt(assessmentClasses[12]));
             }
             if (!assessmentClasses[13].isEmpty()) {
@@ -124,22 +131,44 @@ public class Account implements Comparable<Account> {
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Assessment Class Percentage: " + e);
-            throw new RuntimeException(e);
+            System.out.println("Invalid Assessment Class Percentage: " + assessmentClasses[12] + assessmentClasses[13] + assessmentClasses[14]);
         }
     }
-    public void setLatitude(String latitude){
-        try{
-            this.latitude = Double.parseDouble(latitude);
-        }catch (NumberFormatException e){
-            System.out.println("Invalid latitude: " + latitude);
+
+
+    // Sets this.latitude and this.longitude to doubles
+    // Allows input to be doubles or strings
+    // If input is blank will not change value
+    // If input is invalid will not change value and will display error message
+    // @param newLatitude double or string
+    public void setLatitude(Object obj){
+        if(obj instanceof Double newLatitude){
+            this.latitude = newLatitude;
+            return;
         }
+        if (obj instanceof String newLatitude) {
+            try{
+                this.latitude = Double.parseDouble(newLatitude);
+
+            }catch (NumberFormatException e){
+                System.out.println("Invalid latitude: " + newLatitude);
+
+            }
+        }
+
+
     }
-    public void setLongitude(String longitude){
-        try{
-            this.longitude = Double.parseDouble(longitude);
-        }catch (NumberFormatException e){
-            System.out.println("Invalid longitude: " + longitude);
+    public void setLongitude(Object obj){
+        if(obj instanceof Double newLongitude){
+            this.latitude = newLongitude;
+            return;
+        }
+        if (obj instanceof String newLongitude) {
+            try {
+                this.longitude = Double.parseDouble(newLongitude);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid longitude: " + longitude);
+            }
         }
     }
 
