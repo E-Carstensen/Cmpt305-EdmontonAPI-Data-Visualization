@@ -89,7 +89,7 @@ public class DataSet{
 
 
     public ArrayList<Account> sortAccounts(AccountFilter filter){
-        this.filteredAccountList = new ArrayList<Account>();
+        this.filteredAccountList = new ArrayList<>();
         for (Account account : accountList) {
             if (filter.filter(account)) {
                 this.filteredAccountList.add(account);
@@ -122,15 +122,21 @@ public class DataSet{
 
     public int getEntries(){return this.entries;}
 
-    // Finds the median assessedValue from sortedAccounts array
-    // @returns the exact middle of the array if odd, or the average of both sides if even
-    // @returns 0 if array is empty
-
+    /**************************************************************************
+     * If no variable given to getMedian(), calculates median of entire dataset
+     * Saves value in this.median
+     * ************************************************************************/
     public double getMedian() {
         this.median = getMedian(this.accountList);
         return this.median;
     }
 
+    /*************************************************************************
+     * Finds median assessedValue for given List of Account objects
+     * Returns middle assessedValue of the List if odd size, otherwise average of both sides
+     * Assumes List is already sorted
+     * @returns  double median of ArrayList<Account>
+     ****************************************************************************************> */
     public double getMedian(ArrayList<Account> accounts) {
         if (accounts.isEmpty()){return 0;} // Ensure that sortedAccounts is populated
         if (accounts.size() % 2 == 0) { // If n is even, take the average of both sides of the middle
@@ -146,8 +152,8 @@ public class DataSet{
         return this.maxValue;
     }
     public int getHighestValue(ArrayList<Account> accounts) {
-        this.maxValue = accounts.get(accounts.size()-1).assessedValue;
-        return this.maxValue;
+        maxValue = accounts.get(accounts.size()-1).assessedValue;
+        return maxValue;
     }
 
     public int getLowestValue(){
@@ -155,8 +161,8 @@ public class DataSet{
         return this.minValue;
     }
     public int getLowestValue(ArrayList<Account> accounts) {
-        this.minValue = accounts.get(0).assessedValue;
-        return this.minValue;
+        minValue = accounts.get(0).assessedValue;
+        return minValue;
 
     }
 

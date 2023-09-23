@@ -28,21 +28,25 @@ public class Account implements Comparable<Account> {
         // Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,
         // Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,
         // Assessment Class 1,Assessment Class 2,Assessment Class 3
-        setAccountNumber(data[0]);
-        setSuite(data[1]);
-        setHouseNumber(data[2]);
-        setStreetName(data[3]);
-        setGarage(data[4]); // Converts Y/N into bool
-        setNeighborhoodId(data[5]);
-        setNeighborhood(data[6]);
-        setWard(data[7]);
-        setAssessedValue(data[8]);
-        setLatitude(data[9]);
-        setLongitude(data[10]);
-        setPoint(data[11]);
-        setAssessmentClasses(data);
+        try {
+            setAccountNumber(data[0]);
+            setSuite(data[1]);
+            setHouseNumber(data[2]);
+            setStreetName(data[3]);
+            setGarage(data[4]); // Converts Y/N into bool
+            setNeighborhoodId(data[5]);
+            setNeighborhood(data[6]);
+            setWard(data[7]);
+            setAssessedValue(data[8]);
+            setLatitude(data[9]);
+            setLongitude(data[10]);
+            setPoint(data[11]);
+            setAssessmentClasses(data);
 
-        address = new Address(this);
+            address = new Address(this);
+        }catch(Exception e){
+            System.out.println("Invalid CSV formatting: " + e);
+        }
     }
 
 
@@ -102,26 +106,30 @@ public class Account implements Comparable<Account> {
     public void setWard(String ward){this.ward = ward;}
     public void setPoint(String point){this.point = point;}
 
-    // Takes String[] of split csv line and assigns a map of assessment classes to percentage
-    // Not all properties have multiple assessment classes, so we need to check if the column contains a percentage
-    // Attempts to parse String percentage into an integer
-    // Will display error message if percentage is not an integer and return
-    // @param assessmentClasses String[] of split csv line
+     /************************************
+     * Takes String[] of split csv line and assigns a map of assessment classes to percentage
+     * Not all properties have multiple assessment classes, so we need to check if the column contains a percentage
+     * Some classes are repeated, if so we sum the percentage
+     * Attempts to parse String percentage into an integer
+     * Will display error message if percentage is not an integer and return
+     * @param assessmentClasses String[] of split csv line
+     */
     public void setAssessmentClasses(String[] assessmentClasses){
         try {
-            // Dictionary mapping an Assessment Type to a Percentage
-            if(!assessmentClasses[12].isEmpty()){ //
-                this.assessmentClasses.put(assessmentClasses[15], Integer.parseInt(assessmentClasses[12]));
-            }
-            if (!assessmentClasses[13].isEmpty()) {
-                this.assessmentClasses.put(assessmentClasses[16], Integer.parseInt(assessmentClasses[13]));
-            }
-            if (!assessmentClasses[14].isEmpty()) {
-                this.assessmentClasses.put(assessmentClasses[17], Integer.parseInt(assessmentClasses[14]));
-            }
+            String[] classes = {assessmentClasses[15], assessmentClasses[16], assessmentClasses[17]};
+            String[] percentages = {assessmentClasses[12], assessmentClasses[13], assessmentClasses[14]};
 
+            for (int i = 0; i < classes.length; i++) {
+                if (!percentages[i].isEmpty()) { // If column contained a percentage
+                    int newValue = Integer.parseInt(percentages[i]); // Attempt to parse percentage to integer
+                        // If class is already in map, add new value to existing value, else add new value to map
+                        this.assessmentClasses.put(classes[i], this.assessmentClasses.getOrDefault(classes[i], 0) + newValue);
+                }
+            }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Assessment Class Percentage: " + assessmentClasses[12] + assessmentClasses[13] + assessmentClasses[14]);
+            System.out.println("Invalid Assessment Class Percentage: " + assessmentClasses[12] + ", " + assessmentClasses[13] + ", " + assessmentClasses[14]);
+        }catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid csv Format, Len should equal 18, actual: " + assessmentClasses.length);
         }
     }
 

@@ -1,8 +1,8 @@
-import javax.xml.crypto.Data;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -15,7 +15,7 @@ public class Main {
         DataSet dataSet = new DataSet(filePath);
 
 
-        displayDataSetStats(dataSet);
+        displayStats(dataSet, dataSet.accountList);
 
         displayAccountStats(dataSet);
 
@@ -26,16 +26,16 @@ public class Main {
     }
 
 
-    public static void displayDataSetStats(DataSet dataSet){
+    public static void displayStats(DataSet dataSet, ArrayList<Account> accounts){
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
 
-        System.out.println("Number of Entries: " + dataSet.entries);
-        System.out.println("Highest Value: " + dollar.format(dataSet.getHighestValue()));
-        System.out.println("Lowest Value: " + dollar.format(dataSet.getLowestValue()));
-        System.out.println("Range: " + dollar.format((dataSet.maxValue - dataSet.minValue)));
-        System.out.println("Mean Value: " + dollar.format(dataSet.getMean()));
-        System.out.println("Median Value: " + dollar.format(dataSet.getMedian()));
+        System.out.println("Number of Entries: " + accounts.size());
+        System.out.println("Highest Value: " + dollar.format(dataSet.getHighestValue(accounts)));
+        System.out.println("Lowest Value: " + dollar.format(dataSet.getLowestValue(accounts)));
+        System.out.println("Range: " + dollar.format((dataSet.getHighestValue(accounts) - dataSet.getLowestValue(accounts))));
+        System.out.println("Mean Value: " + dollar.format(dataSet.getMean(accounts)));
+        System.out.println("Median Value: " + dollar.format(dataSet.getMedian(accounts)));
     }
 
 
@@ -56,14 +56,15 @@ public class Main {
     public static void displayNeighborhoodStats(DataSet dataSet){
         System.out.print("Neighborhood: ");
         String neighborhood = getUserInput();
+        if (neighborhood.isBlank()){return;}
 
         NeighborhoodFilter neighborhoodFilter = new NeighborhoodFilter(neighborhood);
         dataSet.sortAccounts(neighborhoodFilter);
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
 
+        displayStats(dataSet, dataSet.filteredAccountList);
 
-        System.out.println("Highest Value: " + dollar.format(dataSet.getHighestValue(dataSet.filteredAccountList)));
 
 
 
