@@ -1,10 +1,14 @@
+/**********************************************************************************************************************
+ * Eric Carstensen - 3070801
+ * CMPT 305 - X01L
+ **********************************************************************************************************************/
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args){
@@ -14,19 +18,21 @@ public class Main {
 
         DataSet dataSet = new DataSet(filePath);
 
-
         displayStats(dataSet, dataSet.accountList);
 
-        displayAccountStats(dataSet);
+        searchByAccount(dataSet);
 
-        displayNeighborhoodStats(dataSet);
-
-
+        searchByNeighborhood(dataSet);
 
     }
 
 
+    /**
+     * Displays various stats about a given List of Accounts
+     * */
     public static void displayStats(DataSet dataSet, ArrayList<Account> accounts){
+        if (accounts.isEmpty()){System.out.println("No Accounts Found...");return;}
+
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
 
@@ -39,7 +45,7 @@ public class Main {
     }
 
 
-    public static void displayAccountStats(DataSet dataSet){
+    public static void searchByAccount(DataSet dataSet){
 
         System.out.print("Find property by account number: ");
         String accountId = getUserInput();
@@ -53,15 +59,12 @@ public class Main {
         System.out.println("Account Not Found...");
     }
 
-    public static void displayNeighborhoodStats(DataSet dataSet){
+    public static void searchByNeighborhood(DataSet dataSet){
         System.out.print("Neighborhood: ");
         String neighborhood = getUserInput();
-        if (neighborhood.isBlank()){return;}
 
         NeighborhoodFilter neighborhoodFilter = new NeighborhoodFilter(neighborhood);
         dataSet.sortAccounts(neighborhoodFilter);
-
-        DecimalFormat dollar = new DecimalFormat("$#,##0");
 
         displayStats(dataSet, dataSet.filteredAccountList);
 
