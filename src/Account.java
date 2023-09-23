@@ -45,22 +45,14 @@ public class Account implements Comparable<Account> {
         address = new Address(this);
     }
 
-    // Overrides toString() method to return multiline String descriptor of property for printout
-    // Includes account number, address, assessed value, assessment classes, neighborhood, ward, and point
-    // Adds string header to identify each variable
-    // @return multiline String descriptor of property for printout
-    public String toString(){
-
-        return "\nAccount ID:        " + this.accountNumber +
-                "\nAddress:          " + this.address +
-                "\nAssessed Value:   " + this.assessedValue +
-                "\nAssessment Class: " + this.assessmentClasses +
-                "\nNeighborhood:     " + this.neighborhood +
-                " - (" + this.ward + ")" +
-                "\nLocation:         " + this.point;
-    }
 
 
+    /*******************************************************
+     * Begin Setters
+     ********************************************************/
+
+//
+//
     // Sets assessed value - Enforces positive
     // Will convert strings and double to integer, if invalid will not change existing value and display error
     // If input is negative will not change existing assessedValue and return
@@ -99,18 +91,16 @@ public class Account implements Comparable<Account> {
     public void setAccountNumber(String acctNum){
         if(!acctNum.isBlank()){this.accountNumber = acctNum;}
     }
-    public void setHouseNumber(String houseNumber){if(!houseNumber.isBlank()){this.houseNumber = houseNumber;}}
-    public void setStreetName(String streetName){if(!streetName.isBlank()){this.streetName = streetName;}}
+    public void setHouseNumber(String houseNumber){this.houseNumber = houseNumber;}
+    public void setStreetName(String streetName){this.streetName = streetName;}
 
     // Takes String column from csv and converts string "Y/N" to boolean
     // Y == true; Any other value is false
     public void setGarage(String garage){this.garage = garage.equals("Y");}
-    public void setNeighborhoodId(String neighborhoodId){if(!neighborhoodId.isBlank()){this.neighborhoodId = neighborhoodId;}}
-    public void setNeighborhood(String neighborhood){if(!neighborhood.isBlank()){this.neighborhood = neighborhood;}}
-    public void setWard(String ward){if(!ward.isBlank()){this.ward = ward;}}
-    public void setPoint(String point){if(!point.isBlank()){this.point = point;}}
-
-
+    public void setNeighborhoodId(String neighborhoodId){this.neighborhoodId = neighborhoodId;}
+    public void setNeighborhood(String neighborhood){this.neighborhood = neighborhood;}
+    public void setWard(String ward){this.ward = ward;}
+    public void setPoint(String point){this.point = point;}
 
     // Takes String[] of split csv line and assigns a map of assessment classes to percentage
     // Not all properties have multiple assessment classes, so we need to check if the column contains a percentage
@@ -134,7 +124,6 @@ public class Account implements Comparable<Account> {
             System.out.println("Invalid Assessment Class Percentage: " + assessmentClasses[12] + assessmentClasses[13] + assessmentClasses[14]);
         }
     }
-
 
     // Sets this.latitude and this.longitude to doubles
     // Allows input to be doubles or strings
@@ -172,11 +161,48 @@ public class Account implements Comparable<Account> {
         }
     }
 
-    // Overrides compareTo method to compare two accounts by assessment values
+    /*****************************
+     * End Setters - Begin Getters
+     ******************************/
+
+    public String getWard(){return this.ward;}
+    public String getNeighborhood(){return this.neighborhood;}
+    public String getNeighborhoodId(){return this.neighborhoodId;}
+    public String getStreetName(){return this.streetName;}
+    public String getHouseNumber(){return this.houseNumber;}
+    public String getSuite(){return this.suite;}
+    public String getAccountNumber(){return this.accountNumber;}
+    public int getAssessedValue(){return this.assessedValue;}
+    public double getLatitude(){return this.latitude;}
+    public double getLongitude(){return this.longitude;}
+
+
+    /************************************************************************************************
+     * Overrides Comparable to compare assessed value of two accounts
+     * @param other Account object to be compared.
+     * @return a negative int if this < other, 0 if this == other, a positive int if this > other.
+     *******************************************************************************************/
     @Override
     public int compareTo(Account other) {
         return Integer.compare(this.assessedValue, other.assessedValue);
     }
 
+   /*****************************************************************************************
+    * Overrides toString() method to return multiline String descriptor of property for printout
+    * Includes account number, address, assessed value, assessment classes, neighborhood, ward, and point
+    * Adds string header to identify each variable
+    * @return multiline String descriptor of property for printout Overrides toString
+    * ************************************************************************************/
+   @Override
+    public String toString(){
+
+        return "\nAccount ID:        " + this.accountNumber +
+                "\nAddress:          " + this.address +
+                "\nAssessed Value:   " + this.assessedValue +
+                "\nAssessment Class: " + this.assessmentClasses +
+                "\nNeighborhood:     " + this.neighborhood +
+                " - (" + this.ward + ")" +
+                "\nLocation:         " + this.point;
+    }
 
 }

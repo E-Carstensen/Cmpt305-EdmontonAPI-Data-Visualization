@@ -19,14 +19,14 @@ public class Main {
 
         displayAccountStats(dataSet);
 
+        displayNeighborhoodStats(dataSet);
+
 
 
     }
 
 
     public static void displayDataSetStats(DataSet dataSet){
-
-        if(dataSet.maxValue == -1){dataSet.setSortedAccounts();} // If stats have not yet been calculated
 
         DecimalFormat dollar = new DecimalFormat("$#,##0");
 
@@ -46,7 +46,7 @@ public class Main {
 
         for (Account account : dataSet.accountList){
             if (account.accountNumber.equals(accountId)){
-                System.out.println(account); //TODO format assessment classes better
+                System.out.println(account);
                 return;
             }
         }
@@ -56,6 +56,16 @@ public class Main {
     public static void displayNeighborhoodStats(DataSet dataSet){
         System.out.print("Neighborhood: ");
         String neighborhood = getUserInput();
+
+        NeighborhoodFilter neighborhoodFilter = new NeighborhoodFilter(neighborhood);
+        dataSet.sortAccounts(neighborhoodFilter);
+
+        DecimalFormat dollar = new DecimalFormat("$#,##0");
+
+
+        System.out.println("Highest Value: " + dollar.format(dataSet.getHighestValue(dataSet.filteredAccountList)));
+
+
 
 
     }
