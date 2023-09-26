@@ -19,6 +19,7 @@ public class Lab3Main {
 
     public static void searchByAssessmentClass(DataSet dataSet){
 
+        System.out.println("Enter the assessment class you wish to search for:");
         String assessmentClass = Menu.getUserInput();
 
         AssessmentClassFilter filter = new AssessmentClassFilter(assessmentClass);
