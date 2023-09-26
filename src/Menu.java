@@ -1,34 +1,18 @@
-/**********************************************************************************************************************
- * Eric Carstensen - 3070801
- * CMPT 305 - X01L
- **********************************************************************************************************************/
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
-public class Main {
 
-    public static void main(String[] args){
-
-        String filePath =  getFileName();
-        if (filePath.isBlank()){return;}
-
-        DataSet dataSet = new DataSet(filePath);
-
-        displayStats(dataSet, dataSet.accountList);
-
-        searchByAccount(dataSet);
-
-        searchByNeighborhood(dataSet);
-
-    }
+public class Menu {
 
 
     /**
      * Displays various stats about a given List of Accounts
+     * If List of Accounts is empty, prints "No Accounts Found..."
+     * @param dataSet to call stat functions
+     * @param accounts List of Accounts to display stats about
      * */
     public static void displayStats(DataSet dataSet, ArrayList<Account> accounts){
         if (accounts.isEmpty()){System.out.println("No Accounts Found...");return;}
@@ -44,44 +28,20 @@ public class Main {
         System.out.println("Median Value: " + dollar.format(dataSet.getMedian(accounts)));
     }
 
-
-    public static void searchByAccount(DataSet dataSet){
-
-        System.out.print("Find property by account number: ");
-        String accountId = getUserInput();
-
-        for (Account account : dataSet.accountList){
-            if (account.accountNumber.equals(accountId)){
-                System.out.println(account);
-                return;
-            }
-        }
-        System.out.println("Account Not Found...");
-    }
-
-    public static void searchByNeighborhood(DataSet dataSet){
-        System.out.print("Neighborhood: ");
-        String neighborhood = getUserInput();
-
-        NeighborhoodFilter neighborhoodFilter = new NeighborhoodFilter(neighborhood);
-        dataSet.sortAccounts(neighborhoodFilter);
-
-        displayStats(dataSet, dataSet.filteredAccountList);
-
-
-
-
-
-    }
-
-    // Takes one line from the user and returns it as a string
+    // Takes one line from the user and returns it as a string - Allows for empty input
     public static String getUserInput(){
         Scanner sc = new Scanner(System.in);
-        //sc.close();
+        //sc.close(); // Dont close or will be closed for entire run
         return sc.nextLine();
     }
 
 
+    /**
+     * Prompts user to input local path to a csv file
+     * While file does not exist, re-prompts user for file name, if user enters 'n' then quit
+     * @return absolute path to csv file as a string
+     *         Empty sting if user quits program
+     */
     public static String getFileName(){
 
         System.out.print("CSV Filename: "); // Prompt user to input local csv file name
@@ -99,5 +59,4 @@ public class Main {
         }
         return path.toAbsolutePath().toString(); // Return absolute path to file as a string
     }
-
 }

@@ -55,8 +55,7 @@ public class Account implements Comparable<Account> {
      * Begin Setters
      ********************************************************/
 
-//
-//
+
     // Sets assessed value - Enforces positive
     // Will convert strings and double to integer, if invalid will not change existing value and display error
     // If input is negative will not change existing assessedValue and return
@@ -115,9 +114,22 @@ public class Account implements Comparable<Account> {
      * @param assessmentClasses String[] of split csv line
      */
     public void setAssessmentClasses(String[] assessmentClasses){
+
+        String[] classes;
+        String[] percentages;
+
+        if(assessmentClasses.length == 6){
+            classes = new String[]{assessmentClasses[3], assessmentClasses[4], assessmentClasses[5]};
+            percentages = new String[]{assessmentClasses[0], assessmentClasses[1], assessmentClasses[2]};
+        }
+        else if (assessmentClasses.length == 18){
+            classes = new String[]{assessmentClasses[15], assessmentClasses[16], assessmentClasses[17]};
+            percentages = new String[]{assessmentClasses[12], assessmentClasses[13], assessmentClasses[14]};
+        }else {
+            System.out.println("Invalid csv Format, Len should equal 6 or 18, actual: " + assessmentClasses.length);
+            return;
+        }
         try {
-            String[] classes = {assessmentClasses[15], assessmentClasses[16], assessmentClasses[17]};
-            String[] percentages = {assessmentClasses[12], assessmentClasses[13], assessmentClasses[14]};
 
             for (int i = 0; i < classes.length; i++) {
                 if (!percentages[i].isEmpty()) { // If column contained a percentage
@@ -133,11 +145,13 @@ public class Account implements Comparable<Account> {
         }
     }
 
+    /********************************************
     // Sets this.latitude and this.longitude to doubles
     // Allows input to be doubles or strings
     // If input is blank will not change value
     // If input is invalid will not change value and will display error message
     // @param newLatitude double or string
+     ******************************************/
     public void setLatitude(Object obj){
         if(obj instanceof Double newLatitude){
             this.latitude = newLatitude;
@@ -183,6 +197,8 @@ public class Account implements Comparable<Account> {
     public int getAssessedValue(){return this.assessedValue;}
     public double getLatitude(){return this.latitude;}
     public double getLongitude(){return this.longitude;}
+
+    public Map<String, Integer> getAssessmentClasses(){return this.assessmentClasses;}
 
 
     /************************************************************************************************

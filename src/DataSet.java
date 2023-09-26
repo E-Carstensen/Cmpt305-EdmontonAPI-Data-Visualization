@@ -9,7 +9,7 @@ public class DataSet{
     // Array of account objects sorted by assessedValue, filtered by most recently queried filter
     public ArrayList<Account> filteredAccountList = new ArrayList<>();
 
-
+    public boolean isSorted = false;
     int entries = 0;
     int maxValue = -1;
     int minValue = Integer.MAX_VALUE;
@@ -74,21 +74,42 @@ public class DataSet{
         Account newAccount = new Account(data);
         accountList.add(newAccount);
         this.entries++;
+        this.isSorted = false;
     }
 
     public void addEntry(Account account){
         accountList.add(account);
         this.entries++;
+        this.isSorted = false;
     }
 
 
+
+
+    /**
+     * Sorts given List of Account objects by assessedValue
+     * If no List given, sort entire dataSet accountList
+     * @param accounts List of Account objects to be sorted
+     * @return List of Account objects sorted by assessedValue
+     */
+    public ArrayList<Account> sortAccounts(ArrayList<Account> accounts){
+        Collections.sort(accounts);
+        return accounts;
+    }
 
     public void sortAccounts(){
         Collections.sort(this.accountList);
+        this.isSorted = true;
     }
 
 
-    public ArrayList<Account> sortAccounts(AccountFilter filter){
+    /**
+     * Filters Accounts within accountList by given filter interface
+     * Returns an ArrayList of Accounts that match the filter, sorted by assessedValue
+     * @param filter AccountFilter interface
+     * @return ArrayList of Accounts that match the filter
+     */
+    public ArrayList<Account> filterAccounts(AccountFilter filter){
         this.filteredAccountList = new ArrayList<>();
         for (Account account : accountList) {
             if (filter.filter(account)) {
@@ -106,9 +127,16 @@ public class DataSet{
      * @ returns the mean assessedValue of the entire dataset as double
      * *******************************/
     public double getMean() {
+        if(!isSorted) {this.sortAccounts();}
         this.mean = getMean(this.accountList);
         return this.mean;
     }
+
+    /**************************
+     * Calculate the mean of given List of Account objects, Assumes List is already sorted by assessedValue
+     * @param accounts List of Account objects
+     * @return the mean assessed value of given List of Account objects
+     */
 
     public double getMean(ArrayList<Account> accounts) {
         if (accounts.isEmpty()){return 0;} // Ensure that sortedAccounts is populated
@@ -127,6 +155,7 @@ public class DataSet{
      * Saves value in this.median
      * ************************************************************************/
     public double getMedian() {
+        if(!isSorted) {this.sortAccounts();}
         this.median = getMedian(this.accountList);
         return this.median;
     }
@@ -142,12 +171,13 @@ public class DataSet{
         if (accounts.size() % 2 == 0) { // If n is even, take the average of both sides of the middle
             median = ((accounts.get(accounts.size() / 2 - 1).assessedValue + accounts.get(accounts.size() / 2).assessedValue) / 2.0);
         } else { // Else take the exact middle value
-            median = accounts.get(accounts.size() / 2).assessedValue;
+            median = accounts.get((accounts.size() / 2)).assessedValue;
         }
         return median;
     }
 
     public int getHighestValue(){
+        if(!isSorted) {this.sortAccounts();}
         this.maxValue = accountList.get(accountList.size()-1).assessedValue;
         return this.maxValue;
     }
@@ -157,7 +187,8 @@ public class DataSet{
     }
 
     public int getLowestValue(){
-        this.minValue = accountList.get(0).assessedValue;
+        if(!isSorted) {this.sortAccounts();}
+        this.minValue = getLowestValue(this.accountList);
         return this.minValue;
     }
     public int getLowestValue(ArrayList<Account> accounts) {
