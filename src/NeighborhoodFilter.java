@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 public class NeighborhoodFilter implements AccountFilter {
     String filter;
     public NeighborhoodFilter(String filter) {

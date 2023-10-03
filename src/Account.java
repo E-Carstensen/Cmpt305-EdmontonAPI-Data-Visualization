@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Account implements Comparable<Account> {
     public String accountNumber, suite, houseNumber, streetName;
@@ -115,34 +114,54 @@ public class Account implements Comparable<Account> {
      */
     public void setAssessmentClasses(String[] assessmentClasses){
 
-        String[] classes;
-        String[] percentages;
+        List<String> classes = new ArrayList<>();
+        List<String> percentages = new ArrayList<>();
 
-        if(assessmentClasses.length == 6){
-            classes = new String[]{assessmentClasses[3], assessmentClasses[4], assessmentClasses[5]};
-            percentages = new String[]{assessmentClasses[0], assessmentClasses[1], assessmentClasses[2]};
-        }
-        else if (assessmentClasses.length == 18){
-            classes = new String[]{assessmentClasses[15], assessmentClasses[16], assessmentClasses[17]};
-            percentages = new String[]{assessmentClasses[12], assessmentClasses[13], assessmentClasses[14]};
+        if (assessmentClasses.length == 18){ // If input is a full line from the csv file
+            classes = List.of(assessmentClasses[15], assessmentClasses[16], assessmentClasses[17]);
+            percentages = List.of(assessmentClasses[12], assessmentClasses[13], assessmentClasses[14]);
         }else {
-            System.out.println("Invalid csv Format, Len should equal 6 or 18, actual: " + assessmentClasses.length);
-            return;
+            // Array of classes and percentages pairs of some length
+            for (String assessmentClass : assessmentClasses) {
+                if (assessmentClass.matches("[0-9]+")) {
+                    percentages.add(assessmentClass);
+                } else if (!assessmentClass.isEmpty()) {
+                    classes.add(assessmentClass);
+                }
+            }
         }
+
+        if (percentages.size()!= classes.size()) { // Must be equal number of classes and percentages
+        System.out.println("Number of classes and percentages do not match");
+        return;}
+
+        this.assessmentClasses = parseAssessmentClasses(classes, percentages);
+
+    }
+
+    /**
+     * Takes a list of classes and percentages or equal size and returns a map of class to percentage
+     * Parses percentages into integers, will display error message if percentage is not an integer and return map at time
+     * @param classes List of each assessed class
+     * @param percentages List of each assessed class's percentage in order respectively
+     * @return Map of AssessmentClass to percentage as integer
+     */
+    private Map<String, Integer> parseAssessmentClasses(List<String>classes, List<String>percentages){
+        Map<String, Integer> assessmentClasses = new HashMap<>();
         try {
 
-            for (int i = 0; i < classes.length; i++) {
-                if (!percentages[i].isEmpty()) { // If column contained a percentage
-                    int newValue = Integer.parseInt(percentages[i]); // Attempt to parse percentage to integer
-                        // If class is already in map, add new value to existing value, else add new value to map
-                        this.assessmentClasses.put(classes[i], this.assessmentClasses.getOrDefault(classes[i], 0) + newValue);
+            for (int i = 0; i < classes.size(); i++) {
+                if (!(percentages.get(i).isEmpty())) { // If column contained a percentage
+                    int newValue = Integer.parseInt(percentages.get(i)); // Attempt to parse percentage to integer
+                    // If class is already in map, add new value to existing value, else add new value to map
+                    assessmentClasses.put(classes.get(i), assessmentClasses.getOrDefault(classes.get(i), 0) + newValue);
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Assessment Class Percentage: " + assessmentClasses[12] + ", " + assessmentClasses[13] + ", " + assessmentClasses[14]);
-        }catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Invalid csv Format, Len should equal 18, actual: " + assessmentClasses.length);
+            System.out.println("Invalid Assessment Class Percentage: " + percentages);
         }
+
+        return assessmentClasses;
     }
 
     /********************************************

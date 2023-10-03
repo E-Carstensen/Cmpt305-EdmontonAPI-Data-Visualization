@@ -28,6 +28,7 @@ public class Menu {
         System.out.println("Median Value: " + dollar.format(dataSet.getMedian(accounts)));
     }
 
+
     // Takes one line from the user and returns it as a string - Allows for empty input
     public static String getUserInput(){
         Scanner sc = new Scanner(System.in);
@@ -47,7 +48,7 @@ public class Menu {
         System.out.print("CSV Filename: "); // Prompt user to input local csv file name
         String input = getUserInput();
 
-        if (input.isBlank()){input = "test.csv";} // TODO REMOVE For easier debugging, remove in future
+        if (input.isBlank()){input = "test.csv";} // TODO: REMOVE, For easier debugging, if input empty, open test file
 
         Path path = Paths.get("src", input);
         while(!Files.exists(path)){ // While file does not exist
