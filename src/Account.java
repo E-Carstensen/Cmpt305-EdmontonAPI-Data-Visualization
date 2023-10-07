@@ -1,5 +1,10 @@
 import java.util.*;
 
+
+/**
+ * Represents a single account in the data set
+ *
+ */
 public class Account implements Comparable<Account> {
     public String accountNumber, suite, houseNumber, streetName;
     public String neighborhoodId, neighborhood, ward;
@@ -9,24 +14,35 @@ public class Account implements Comparable<Account> {
     String point;
     public Address address;
 
-    // Maps assessment class to percentage of that account for this property
+    // Maps assessment class to a percentage
     Map<String, Integer> assessmentClasses = new HashMap<>();
 
+    // If given data from csv during initialization, assigns values to object variables
     Account(String[] data) {
         assignData(data);
     }
-    Account() {
 
-    }
+    // Allows for empty initialization, all values will be undefined, likely null, though may be unpredictable
+    Account() {}
 
 
-    //Takes a line from csv data set and assigns values to object variables
+    /**
+     * Assigns data from csv file to object variables
+     * Assumes data is in the expected format from the example csv file, order as shown below
+     * If data is not in the expected format will assign data upto unexpected values then display error message
+     * If there are less than 15 data points in the csv file, display error message, return without assigning data
+     * @param data Line from the csv file split into array on "," character
+     */
     public void assignData(String[] data){
         // Order of data points in csv file
         // Account Number,Suite,House Number,Street Name,Garage,Neighbourhood ID,
         // Neighbourhood,Ward,Assessed Value,Latitude,Longitude,Point Location,
         // Assessment Class % 1,Assessment Class % 2,Assessment Class % 3,
         // Assessment Class 1,Assessment Class 2,Assessment Class 3
+
+        // If not enough data points, display error message, return without assigning data
+        if (data.length!= 18) {System.out.println("Invalid CSV data length, should be 18, is: " + data.length);return;}
+
         try {
             setAccountNumber(data[0]);
             setSuite(data[1]);
@@ -50,16 +66,20 @@ public class Account implements Comparable<Account> {
 
 
 
-    /*******************************************************
-     * Begin Setters
-     ********************************************************/
+    /*****************************************************************************************************************
+                                                  - Begin Setters -
+     ******************************************************************************************************************/
 
-
-    // Sets assessed value - Enforces positive
-    // Will convert strings and double to integer, if invalid will not change existing value and display error
-    // If input is negative will not change existing assessedValue and return
-    // @param new value for this.assessed value as integer, string or double
+    /**
+     * Sets assessed value - Enforces positive values only.
+     * Will convert input from String or Double to Integer.
+     * If the input is invalid or negative, the existing assessedValue will not be changed, and an error will be displayed.
+     *
+     * @param obj The new value for this.assessedValue, accepted as an Integer, String, or Double.
+     */
     public void setAssessedValue(Object obj){
+
+        // If obj is string, attempt to parse, if value is not numeric, display error and leave existing value unchanged
         if (obj instanceof String value) {
             try {
                 int valueInt = Integer.parseInt(value);
@@ -71,12 +91,16 @@ public class Account implements Comparable<Account> {
                 System.out.println("Invalid Assessed Value: " + e);
             }
         }
+
+        // If obj is an integer, enforce positive value, if negative, leave existing value unchanged
         if (obj instanceof Integer value){
             if (value > 0) {
                 this.assessedValue = value;
                 return;
             }
         }
+
+        // If obj is a double, enforce positive value, if negative, leave existing value unchanged
         if (obj instanceof Double value) {
             if (value > 0) {
                 this.assessedValue = value.intValue();
@@ -117,11 +141,13 @@ public class Account implements Comparable<Account> {
         List<String> classes = new ArrayList<>();
         List<String> percentages = new ArrayList<>();
 
-        if (assessmentClasses.length == 18){ // If input is a full line from the csv file
+        // If the input array represents a full CSV line
+        if (assessmentClasses.length == 18){ // 18 == length of full csv line
+            // Assign values from set locations in csv line
             classes = List.of(assessmentClasses[15], assessmentClasses[16], assessmentClasses[17]);
             percentages = List.of(assessmentClasses[12], assessmentClasses[13], assessmentClasses[14]);
         }else {
-            // Array of classes and percentages pairs of some length
+            // Array is of some length, containing pairs of class and percentage
             for (String assessmentClass : assessmentClasses) {
                 if (assessmentClass.matches("[0-9]+")) {
                     percentages.add(assessmentClass);
@@ -131,45 +157,61 @@ public class Account implements Comparable<Account> {
             }
         }
 
-        if (percentages.size()!= classes.size()) { // Must be equal number of classes and percentages
+        if (percentages.size() != classes.size()) { // Must be equal number of classes and percentages
         System.out.println("Number of classes and percentages do not match");
         return;}
 
-        this.assessmentClasses = parseAssessmentClasses(classes, percentages);
+        try {
+            this.assessmentClasses = parseAssessmentClasses(classes, percentages);
+        }catch(Exception e){
+            System.out.println("Invalid Assessment Class Percentage:\n " + e.getMessage());
+        }
 
     }
 
     /**
-     * Takes a list of classes and percentages or equal size and returns a map of class to percentage
-     * Parses percentages into integers, will display error message if percentage is not an integer and return map at time
+     * Takes a list of classes and percentages of equal size and returns a map of class to percentage
+     * Parses percentages into integers
+     *
      * @param classes List of each assessed class
      * @param percentages List of each assessed class's percentage in order respectively
-     * @return Map of AssessmentClass to percentage as integer
+     * @return Map of AssessmentClass to percentages
+     * @throws IllegalArgumentException if number of classes and percentages do not match
+     * @throws NumberFormatException if percentage is not an integer
      */
-    private Map<String, Integer> parseAssessmentClasses(List<String>classes, List<String>percentages){
+    private Map<String, Integer> parseAssessmentClasses(List<String>classes, List<String>percentages) {
         Map<String, Integer> assessmentClasses = new HashMap<>();
+
+        if (classes.size() != percentages.size()) { // Must be equal number of classes and percentages
+            throw new IllegalArgumentException("Number of classes and percentages do not match");
+        }
+
         try {
+
 
             for (int i = 0; i < classes.size(); i++) {
                 if (!(percentages.get(i).isEmpty())) { // If column contained a percentage
                     int newValue = Integer.parseInt(percentages.get(i)); // Attempt to parse percentage to integer
+
+                    if (newValue < 0 || newValue > 100) {
+                        throw new IllegalArgumentException("Invalid Assessment Class Percentage: " + newValue);
+                    }
                     // If class is already in map, add new value to existing value, else add new value to map
                     assessmentClasses.put(classes.get(i), assessmentClasses.getOrDefault(classes.get(i), 0) + newValue);
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Assessment Class Percentage: " + percentages);
+            throw new NumberFormatException("Invalid Assessment Class Percentage: " + percentages);
         }
-
         return assessmentClasses;
     }
 
     /********************************************
-    // Sets this.latitude and this.longitude to doubles
-    // Allows input to be doubles or strings
-    // If input is blank will not change value
-    // If input is invalid will not change value and will display error message
-    // @param newLatitude double or string
+    * Sets this.latitude and this.longitude to doubles
+    * Allows input to be doubles or strings
+    * If input is blank will not change value
+    * If input is invalid will not change value and will display error message
+    * @param obj double or string to be parsed and set as latitude or longitude
      ******************************************/
     public void setLatitude(Object obj){
         if(obj instanceof Double newLatitude){
@@ -202,9 +244,9 @@ public class Account implements Comparable<Account> {
         }
     }
 
-    /*****************************
-     * End Setters - Begin Getters
-     ******************************/
+    /***********************************************************************************************************
+     *                                 End Setters - Begin Getters
+     ************************************************************************************************************/
 
     public String getWard(){return this.ward;}
     public String getNeighborhood(){return this.neighborhood;}

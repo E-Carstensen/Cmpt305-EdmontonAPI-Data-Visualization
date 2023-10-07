@@ -1,4 +1,6 @@
 /**
+ * AccountFilter interface
+ * Filters Account objects based on their neighborhood
  *
  */
 

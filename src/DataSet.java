@@ -1,3 +1,8 @@
+/**********************************************************************************************************************
+ * Eric Carstensen - 3070801
+ * CMPT 305 - X01L - Milestone 1
+ **********************************************************************************************************************/
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -105,9 +110,10 @@ public class DataSet{
 
     /**
      * Filters Accounts within accountList by given filter interface
+     * Parameter filtered by depends on implementation of filter interface
      * Returns an ArrayList of Accounts that match the filter, sorted by assessedValue
-     * @param filter AccountFilter interface
-     * @return ArrayList of Accounts that match the filter
+     * @param filter AccountFilter interface to be used to filter accountList
+     * @return ArrayList of Accounts that match the filter sorted by assessedValue
      */
     public ArrayList<Account> filterAccounts(AccountFilter filter){
         this.filteredAccountList = new ArrayList<>();
@@ -121,20 +127,9 @@ public class DataSet{
         return this.filteredAccountList;
     }
 
-
-    /******************************
-    * If no filter given to getMean(), calculate for entire dataset and saves it as this.mean
-     * @ returns the mean assessedValue of the entire dataset as double
-     * *******************************/
-    public double getMean() {
-        if(!isSorted) {this.sortAccounts();}
-        this.mean = getMean(this.accountList);
-        return this.mean;
-    }
-
     /**************************
      * Calculate the mean of given List of Account objects, Assumes List is already sorted by assessedValue
-     * @param accounts List of Account objects
+     * @param accounts List of Account objects sorted by AssessedValue
      * @return the mean assessed value of given List of Account objects
      */
 
@@ -148,17 +143,20 @@ public class DataSet{
         return mean;
     }
 
+    /******************************
+     * If no filter given to getMean(), calculate for entire dataset and saves it as this.mean
+     * @returns the mean assessedValue of the entire dataset as double
+     * *******************************/
+    public double getMean() {
+        if(!isSorted) {this.sortAccounts();}
+        this.mean = getMean(this.accountList);
+        return this.mean;
+    }
+
+
     public int getEntries(){return this.entries;}
 
-    /**************************************************************************
-     * If no variable given to getMedian(), calculates median of entire dataset
-     * Saves value in this.median
-     * ************************************************************************/
-    public double getMedian() {
-        if(!isSorted) {this.sortAccounts();}
-        this.median = getMedian(this.accountList);
-        return this.median;
-    }
+
 
     /*************************************************************************
      * Finds median assessedValue for given List of Account objects
@@ -175,15 +173,45 @@ public class DataSet{
         }
         return median;
     }
+    /**************************************************************************
+     * If no variable given to getMedian(), calculates median of entire dataset
+     * Saves value in this.median
+     * ************************************************************************/
+    public double getMedian() {
+        if(!isSorted) {this.sortAccounts();}
+        this.median = getMedian(this.accountList);
+        return this.median;
+    }
 
+
+    /**
+     * Returns the highest assessedValue for given List of Account objects
+     * If no variable given to getHighestValue(), calculates highest assessedValue of entire dataset
+     * Assumes List is already sorted
+     * @param accounts list of Account objects sorted by assessedValue
+     * @return int highest assessedValue of given List of Account objects
+     */
+    public int getHighestValue(ArrayList<Account> accounts) {
+        maxValue = accounts.get(accounts.size()-1).assessedValue;
+        return maxValue;
+    }
     public int getHighestValue(){
         if(!isSorted) {this.sortAccounts();}
         this.maxValue = accountList.get(accountList.size()-1).assessedValue;
         return this.maxValue;
     }
-    public int getHighestValue(ArrayList<Account> accounts) {
-        maxValue = accounts.get(accounts.size()-1).assessedValue;
-        return maxValue;
+
+
+    /**
+     * Returns the lowest assessedValue for given List of Account objects
+     * If no variable given to getLowestValue(), calculates lowest assessedValue of entire dataset
+     * Assumes list is already sorted
+     * @param accounts list of Account objects sorted by assessedValue
+     * @return minValue lowest assessedValue of given List of Account objects
+     */
+    public int getLowestValue(ArrayList<Account> accounts) {
+        minValue = accounts.get(0).assessedValue;
+        return minValue;
     }
 
     public int getLowestValue(){
@@ -191,15 +219,29 @@ public class DataSet{
         this.minValue = getLowestValue(this.accountList);
         return this.minValue;
     }
-    public int getLowestValue(ArrayList<Account> accounts) {
-        minValue = accounts.get(0).assessedValue;
-        return minValue;
 
+
+    /**
+     * Adds wards to HashSet, keeping only unique wards
+     * @return int number of unique wards in DataSet
+     */
+    public int countUniqueWards(){
+        for (Account account : accountList) {
+            this.wards.add(account.getWard());
+        }
+        return this.wards.size();
     }
 
-    public int countUniqueWards(){return this.wards.size();}
 
+    /**
+     * Iterates through accounts in DataSet
+     * Adds all assessment classes to HashSet, keeping only unique assessment classes
+     * @return int number of unique assessment classes in DataSet
+     */
     public int countAssessmentClasses() {
+        for (Account account : accountList) {
+            this.uniqueClasses.addAll(account.getAssessmentClasses().keySet());
+        }
         return this.uniqueClasses.size();
     }
 }

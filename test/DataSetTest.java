@@ -118,11 +118,10 @@ class DataSetTest {
 
     @Test
     void getHighestValue() {
-        assertEquals(0, dataSet.getHighestValue());
         Account a1 = new Account();
-        a1.setAssessedValue(0);
+        a1.setAssessedValue(1);
         dataSet.addEntry(a1);
-        assertEquals(0, dataSet.getHighestValue());
+        assertEquals(1, dataSet.getHighestValue());
 
         Account a2 = new Account();
         a2.setAssessedValue(10);

@@ -16,7 +16,6 @@ def copy_first_n_lines(input_file_path, output_file_path, n):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
-# Example usage:
 input_file_path = 'data.csv'  # Replace with your input CSV file path
 output_file_path = 'test.csv'  # Replace with the desired output CSV file path
 n = 100  # Replace with the number of lines you want to copy
