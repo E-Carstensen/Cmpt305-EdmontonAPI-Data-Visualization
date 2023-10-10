@@ -3,13 +3,6 @@
  * CMPT 305 - X01L - Milestone 1
  **********************************************************************************************************************/
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 /**
  * Main class for Lab 2
  * Takes path to a csv file, creates a DataSet object, and displays various information using the Menu class
@@ -18,16 +11,33 @@ public class Lab2Main {
 
     public static void main(String[] args){
 
-        String filePath =  Menu.getFileName();
+        String filePath =  CSVPropertyAssessmentDAO.getFileName();
         if (filePath.isBlank()){return;}
 
         DataSet dataSet = new DataSet(filePath);
 
-        Menu.displayStats(dataSet, dataSet.accountList);
+        CSVPropertyAssessmentDAO.displayStats(dataSet, dataSet.accountList);
 
-        Menu.searchByAccount(dataSet);
+        CSVPropertyAssessmentDAO.searchByAccount(dataSet);
 
-        Menu.searchByNeighborhood(dataSet);
+        CSVPropertyAssessmentDAO.searchByNeighborhood(dataSet);
+
+    }
+
+
+
+    /**
+     * Prompts user to input an account number and searches for a property with matching accountNumber
+     * If match is found, prints account info using Account.toString() override
+     * If no match is found, prints "Account Not Found..."
+     * @param dataSet to search for accounts within
+     */
+    public static void searchByAccount(DataSet dataSet){
+        CSVPropertyAssessmentDAO.searchByAccount(dataSet);
+
+        CSVPropertyAssessmentDAO.searchByNeighborhood(dataSet);
+        System.out.print("Find property by account number: ");
+        String accountId = CSVPropertyAssessmentDAO.getUserInput();
 
     }
 

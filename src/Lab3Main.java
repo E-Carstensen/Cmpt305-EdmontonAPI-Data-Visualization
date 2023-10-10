@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 /**********************************************************************************************************************
  * Eric Carstensen - 3070801
  * CMPT 305 - X01L - Milestone 1
@@ -14,15 +13,22 @@ import java.util.ArrayList;
  */
 public class Lab3Main {
     public static void main(String[] args) {
-        String filePath =  Menu.getFileName();
+
+        /**
+        String filePath =  CSVPropertyAssessmentDAO.getFileName();
         if (filePath.isBlank()){return;}
 
         DataSet dataSet = new DataSet(filePath);
 
         dataSet.readFile(filePath);
 
-        Menu.searchByAssessmentClass(dataSet);
+        CSVPropertyAssessmentDAO.searchByAssessmentClass(dataSet);
+*/
 
+        System.out.println(APIPropertyAssessmentDAO.getByAccountId("5146sfd600"));
+
+        APIPropertyAssessmentDAO.getByNeighborhood(" ");
+        //System.out.println(APIPropertyAssessmentDAO.getAll());
 
 
 

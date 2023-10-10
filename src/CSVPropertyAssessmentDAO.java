@@ -14,7 +14,7 @@ import java.util.Scanner;
  * Contains methods for taking user input, searching through a given DataSet, and displaying stats about the filtered accounts
  *
  */
-public class Menu {
+public class CSVPropertyAssessmentDAO implements PropertyAssessmentDAO {
 
 
     /**
@@ -80,7 +80,7 @@ public class Menu {
     public static void searchByAccount(DataSet dataSet){
 
         System.out.print("Find property by account number: ");
-        String accountId = Menu.getUserInput();
+        String accountId = getUserInput();
 
         for (Account account : dataSet.accountList){
             if (account.accountNumber.equals(accountId)){
@@ -100,11 +100,11 @@ public class Menu {
      */
     public static void searchByNeighborhood(DataSet dataSet){
         System.out.print("Neighborhood: ");
-        String neighborhood = Menu.getUserInput();
+        String neighborhood = getUserInput();
 
         NeighborhoodFilter neighborhoodFilter = new NeighborhoodFilter(neighborhood);
         ArrayList<Account> filtered = dataSet.filterAccounts(neighborhoodFilter);
-        Menu.displayStats(dataSet, filtered);
+        CSVPropertyAssessmentDAO.displayStats(dataSet, filtered);
 
     }
 
@@ -118,13 +118,13 @@ public class Menu {
     public static void searchByAssessmentClass(DataSet dataSet){
 
         System.out.println("Enter the assessment class you wish to search for:");
-        String assessmentClass = Menu.getUserInput();
+        String assessmentClass = CSVPropertyAssessmentDAO.getUserInput();
 
         AssessmentClassFilter filter = new AssessmentClassFilter(assessmentClass);
 
         ArrayList<Account> filteredAccounts = dataSet.filterAccounts(filter);
 
-        Menu.displayStats(dataSet, filteredAccounts);
+        CSVPropertyAssessmentDAO.displayStats(dataSet, filteredAccounts);
 
 
 

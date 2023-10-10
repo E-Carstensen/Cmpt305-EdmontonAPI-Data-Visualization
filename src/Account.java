@@ -129,12 +129,15 @@ public class Account implements Comparable<Account> {
     public void setPoint(String point){this.point = point;}
 
      /************************************
-     * Takes String[] of split csv line and assigns a map of assessment classes to percentage
-     * Not all properties have multiple assessment classes, so we need to check if the column contains a percentage
-     * Some classes are repeated, if so we sum the percentage
-     * Attempts to parse String percentage into an integer
-     * Will display error message if percentage is not an integer and return
-     * @param assessmentClasses String[] of split csv line
+      * Takes a String Array containing Assessment classes and corresponding percentages
+      * If the array length is 18, then the input is a full line from the csv file, so take data from predefined columns
+      * Otherwise, input is an array containing some number of class-percentage pairs
+      * Not all properties have multiple assessment classes, so we need to check if the column contains a percentage
+      * Some classes are repeated, if so we sum the percentage
+      * Attempts to parse String percentage into an integer
+      * Will display error message if percentage is not an integer and return
+      * @param assessmentClasses String[] containing assessment classes and corresponding percentages
+      *                          Can be a full line from the csv file, or an array containing some number of class-percentage pairs
      */
     public void setAssessmentClasses(String[] assessmentClasses){
 
